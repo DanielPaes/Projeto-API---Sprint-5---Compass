@@ -1,13 +1,9 @@
-import express, {Request, Response} from 'express';
 
-const app = express();
+import app from './app';
 
-app.get('/', (req: Request,res: Response) => {
-    return res.send('Helo World')
-})
+const port = process.env.PORT || 3000;
 
-app.get('/teste', (req: Request,res: Response) => {
-    return res.send('teste1231')
-})
+app.listen(port, () => {
+    console.log(`Servidor escutando em http://localhost:${port}`);
+});
 
-app.listen(3333);
