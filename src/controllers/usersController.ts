@@ -23,7 +23,7 @@ class UsersController{
         const id = req.params.id;
         users.findById(id, (err: any, user:any) =>{
             if(err){
-                res.status(400).send({message: `${err.message} - Id not finded`})
+                res.status(404).send({message: `${err.message} - Id not finded`})
             } else {
                 res.status(200).send(user);
             }
@@ -36,7 +36,7 @@ class UsersController{
             if(!err){
                 res.status(200).send({message: 'User sucessfully updated'})
             } else {
-                res.status(500).send({message: err.message})
+                res.status(404).send({message: err.message})
             }
         })
     }
@@ -45,9 +45,9 @@ class UsersController{
         const id = req.params.id;
         users.findByIdAndDelete(id, (err:any) => {
             if(!err){
-                res.status(200).send({message: 'User successfully deleted'});
+                res.status(204).send({message: 'User successfully deleted'});
             } else {
-                res.status(500).send({message: err.message});
+                res.status(404).send({message: err.message});
             }
         })
     }

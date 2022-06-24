@@ -1,5 +1,6 @@
 import express, {Express} from "express";
 import users from "./usersRoutes";
+import tasks from "./tasksRoutes";
 
 
 const routes = (app: Express) => {
@@ -10,7 +11,8 @@ const routes = (app: Express) => {
 
     app.use(
         express.json(),
-        users
+        users,
+        tasks
     )
 }
 
