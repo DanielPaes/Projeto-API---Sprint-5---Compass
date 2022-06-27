@@ -14,10 +14,20 @@ class TasksController{
     }
 
     static getTasks = (req: Request, res: Response) => {
-        tasks.find((err:any, tasks) => {
-            res.status(200).json(tasks)
-        })
-    }
+        try{
+            const page = req.query.page * 1 || 1;
+            const limit = req.query.limit * 1 || 3;
+            const skip = limit * (page - 1);
+            tasks.find((err, tasks) => {
+                try{
+                    res.status(200).json(tasks);
+                }catch(err){
+                    console.log(err)
+                }                
+            }).limit(limit).skip(skip);
+        } catch{
+        }
+}
 
     static getTaskById = (req: Request, res: Response) => {
         const id = req.params.id;

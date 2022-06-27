@@ -8,18 +8,29 @@ class UsersController{
             if(err){
                 res.status(501).send({message: `${err.message} - Failed to register user`})
             } else {
-                res.status(201).send(user.toJSON())
+                res.status(201).send(user.toJSON());
+
             }
         })
     }
 
     static getUsers = (req: Request, res: Response) => {
-        users.find((err:any, users) => {
-            res.status(200).json(users)
-        })
-    }
+        try{
+            const page = req.query.page * 1 || 1;
+            const limit = req.query.limit * 1 || 5;
+            const skip = limit * (page - 1);
+            users.find((err, users) => {
+                try{
+                    res.status(200).json(users);
+                }catch(err){
+                    console.log(err)
+                }                
+            }).limit(limit).skip(skip);
+        } catch{
+        }
+}
 
-    static getUserForId = (req: Request, res: Response) => {
+    static getUserById = (req: Request, res: Response) => {
         const id = req.params.id;
         users.findById(id, (err: any, user:any) =>{
             if(err){
