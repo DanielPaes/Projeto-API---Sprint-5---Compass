@@ -1,5 +1,5 @@
 let buttonGetAll = document.querySelector("#button-get-all");
-let search = document.querySelector("#edit-search");
+let searchUser = document.querySelector("#edit-search");
 let clean = document.querySelector("#edit-clean");
 let buttonEditUser = document.querySelector('#edit-user');
 let buttonDeleteUser = document.querySelector('#edit-delete');
@@ -19,12 +19,40 @@ let inputState = document.querySelector("#input-state");
 let inputCountry = document.querySelector("#input-country");
 let inputZipCode = document.querySelector("#input-zipcode");
 
+let validName = (name) => {
+    var padraoNome = /^[a-zA-Z\u00C0-\u00FF ]*$/gi;
+    let nome = name;
+    return padraoNome.test(nome);
+}
+
+function TestaCPF(strCPF) {
+    var Soma;
+    var Resto;
+    Soma = 0;
+  if (strCPF == "00000000000") return false;
+
+  for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+  Resto = (Soma * 10) % 11;
+
+    if ((Resto == 10) || (Resto == 11))  Resto = 0;
+    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+
+  Soma = 0;
+    for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+    Resto = (Soma * 10) % 11;
+
+    if ((Resto == 10) || (Resto == 11))  Resto = 0;
+    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+    return true;
+}
+
 
 buttonGetAll?.addEventListener('click', function(){
     fetch('http://localhost:3000/users')
         .then((data) => data.json())
         .then((post) => {
-            console.log(post)
+            console.log(post);
+            window.location.href = "http://localhost:3000/users?page=1&limit=3";
         })
 })
 
@@ -36,7 +64,7 @@ postUser?.addEventListener('click', function(event){
 
     let data = fillObject();
 
-    if(inputName.value.length > 6) {
+    if(inputName.value.length > 6 && validName(inputName.value) && TestaCPF(inputCpf.value)) {
         try{
             fetch('http://localhost:3000/users', {
                 method: "POST",
@@ -54,7 +82,7 @@ postUser?.addEventListener('click', function(event){
     }    
 })
 
-search?.addEventListener('click', async function(event){
+searchUser?.addEventListener('click', async function(event){
     event.preventDefault();
     try{
         await fetch(`http://localhost:3000/users/${inputId.value}`)

@@ -26,7 +26,8 @@ class UsersController{
                     console.log(err)
                 }                
             }).limit(limit).skip(skip);
-        } catch{
+        } catch(err){
+            console.log(err);
         }
 }
 
