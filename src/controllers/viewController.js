@@ -19,33 +19,6 @@ let inputState = document.querySelector("#input-state");
 let inputCountry = document.querySelector("#input-country");
 let inputZipCode = document.querySelector("#input-zipcode");
 
-let validName = (name) => {
-    var padraoNome = /^[a-zA-Z\u00C0-\u00FF ]*$/gi;
-    let nome = name;
-    return padraoNome.test(nome);
-}
-
-function TestaCPF(strCPF) {
-    var Soma;
-    var Resto;
-    Soma = 0;
-  if (strCPF == "00000000000") return false;
-
-  for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
-  Resto = (Soma * 10) % 11;
-
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
-
-  Soma = 0;
-    for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
-    Resto = (Soma * 10) % 11;
-
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
-    return true;
-}
-
 
 buttonGetAll?.addEventListener('click', function(){
     fetch('http://localhost:3000/users')
@@ -59,12 +32,41 @@ buttonGetAll?.addEventListener('click', function(){
 
 let postUser = document.querySelector('#submit-user');
 
+function validateAge(){
+    let today = new Date();
+    let birthdate = inputBirthDate.value;
+    console.log(birthdate);
+    let birthdatesplit = birthdate.split('T')[0].split('-');
+    let birthYear = birthdatesplit[0];
+    let birthMonth = birthdatesplit[1];
+    let birthDay = birthdatesplit[2];
+
+    let nascimento = new Date(birthYear, (birthMonth - 1), birthDay);    
+        let diferencaAnos = today.getFullYear() - nascimento.getFullYear();
+        if ( new Date(today.getFullYear(), today.getMonth(), today.getDate()) < 
+             new Date(today.getFullYear(), nascimento.getMonth(), nascimento.getDate()) )
+            diferencaAnos--;
+            console.log(diferencaAnos);   
+    
+    if(diferencaAnos < 18){
+        return false;
+    } else{
+        return true;
+    }
+}
+
 postUser?.addEventListener('click', function(event){
     event.preventDefault();
 
     let data = fillObject();
 
-    if(inputName.value.length > 6 && validName(inputName.value) && TestaCPF(inputCpf.value)) {
+    validateAge();
+
+    if(validatePassword(inputPassword.value) 
+        && validateName(inputName.value) 
+        && validateCPF(inputCpf.value) 
+        && validateEmail(inputEmail.value)
+        && validateAge()) {
         try{
             fetch('http://localhost:3000/users', {
                 method: "POST",
@@ -176,4 +178,50 @@ function cleanObject(){
     inputCountry.value = '',
     inputZipCode.value = ''
 }
+
+// Funções de validação
+
+let validateName = (name) => {
+    var padraoNome = /^[a-zA-Z\u00C0-\u00FF ]*$/gi;
+    let texto = name;
+    return padraoNome.test(texto);
+}
+
+function validateCPF(strCPF) {
+    var Soma;
+    var Resto;
+    Soma = 0;
+  if (strCPF == "00000000000") return false;
+
+  for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+  Resto = (Soma * 10) % 11;
+
+    if ((Resto == 10) || (Resto == 11))  Resto = 0;
+    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+
+  Soma = 0;
+    for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+    Resto = (Soma * 10) % 11;
+
+    if ((Resto == 10) || (Resto == 11))  Resto = 0;
+    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+    return true;
+}
+
+function validatePassword(password){
+    if(password.length < 6){
+        return false;
+    } else {
+        return true;
+    } 
+}
+
+
+function validateEmail(email){
+    let padraoEmail = /^[\w._-]+@[\w_.-]+\.[\w]/gi;
+    let texto = email;
+    return padraoEmail.test(texto);
+
+}
+
 
