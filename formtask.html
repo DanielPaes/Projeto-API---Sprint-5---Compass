@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>Create User</title>
+</head>
+<body>
+    <header>
+        <h1 class="p-2">Create User</h1>
+    </header>
+    <form method="post" action="/index.html">
+        <div class="personal mb-3 container-fluid">
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="description" class="form-label">Description:</label>
+                    <input type="textarea" class="form-control" id="description" name="description" placeholder="Go to the park with Penny">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="date" class="form-label">Date:</label>
+                    <input type="datetime" class="form-control" id="date" name="date" placeholder="2022-12-24 03:20:00">
+                </div>
+                <div class="col">
+                    <label for="user" class="form-label">User:</label>
+                    <input type="text" class="form-control" id="user" name="user" placeholder="6sc3cip4ovic72">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-evenly mt-3">
+            <button href="index.html" class="btn btn-secondary start-50 translate-middle mt-3">Back</button>
+            <input type="submit" class="btn btn-success start-50 translate-middle mt-3">
+        </div>
+
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>
