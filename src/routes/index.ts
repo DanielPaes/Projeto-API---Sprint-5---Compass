@@ -4,7 +4,7 @@ import tasks from "./tasksRoutes";
 
 
 const routes = (app: Express) => {
-    app.route('/').get((req, res) => {
+    app.route('/api/v1').get((req, res) => {
         res.status(200).send({titulo: "Curso de node"})
     })
 

@@ -21,39 +21,18 @@ let inputZipCode = document.querySelector("#input-zipcode");
 
 
 buttonGetAll?.addEventListener('click', function(){
-    fetch('http://localhost:3000/users')
+    fetch('http://localhost:3000/api/v1/users')
         .then((data) => data.json())
         .then((post) => {
             console.log(post);
-            window.location.href = "http://localhost:3000/users?page=1&limit=3";
+            window.location.href = "http://localhost:3000/api/v1/users?page=1&limit=3";
         })
 })
 
 
 let postUser = document.querySelector('#submit-user');
 
-function validateAge(){
-    let today = new Date();
-    let birthdate = inputBirthDate.value;
-    console.log(birthdate);
-    let birthdatesplit = birthdate.split('T')[0].split('-');
-    let birthYear = birthdatesplit[0];
-    let birthMonth = birthdatesplit[1];
-    let birthDay = birthdatesplit[2];
 
-    let nascimento = new Date(birthYear, (birthMonth - 1), birthDay);    
-        let diferencaAnos = today.getFullYear() - nascimento.getFullYear();
-        if ( new Date(today.getFullYear(), today.getMonth(), today.getDate()) < 
-             new Date(today.getFullYear(), nascimento.getMonth(), nascimento.getDate()) )
-            diferencaAnos--;
-            console.log(diferencaAnos);   
-    
-    if(diferencaAnos < 18){
-        return false;
-    } else{
-        return true;
-    }
-}
 
 postUser?.addEventListener('click', function(event){
     event.preventDefault();
@@ -68,7 +47,7 @@ postUser?.addEventListener('click', function(event){
         && validateEmail(inputEmail.value)
         && validateAge()) {
         try{
-            fetch('http://localhost:3000/users', {
+            fetch('http://localhost:3000/api/v1/users', {
                 method: "POST",
               body: JSON.stringify(data),
               headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -80,14 +59,14 @@ postUser?.addEventListener('click', function(event){
             console.log(err.message);
         }   
     } else {
-        console.log('não passou')
+        alert("Not included.")
     }    
 })
 
 searchUser?.addEventListener('click', async function(event){
     event.preventDefault();
     try{
-        await fetch(`http://localhost:3000/users/${inputId.value}`)
+        await fetch(`http://localhost:3000/api/v1/users/${inputId.value}`)
         .then((data) => data.json())
         .then((post) => {
             inputName.value = post['name'],
@@ -104,7 +83,7 @@ searchUser?.addEventListener('click', async function(event){
             inputZipCode.value = post['zipCode']
         })
     } catch(err){
-        console.log(err.message);
+        console.log(err.message, '404 (Not Found)');
     }
 }
 )
@@ -119,25 +98,38 @@ buttonEditUser?.addEventListener('click', function(event){
 
     let data = fillObject();
 
-    fetch(`http://localhost:3000/users/${inputId.value}`, {
-        method: 'PUT', // Method itself
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify(data) // We send data in JSON format
-        })
-        .then(tes => tes.json())
-        .then(data => console.log(data));
+    if(validatePassword(inputPassword.value) 
+    && validateName(inputName.value) 
+    && validateCPF(inputCpf.value) 
+    && validateEmail(inputEmail.value)
+    && validateAge()){
+        try{
+            fetch(`http://localhost:3000/api/v1/users/${inputId.value}`, {
+                method: 'PUT', // Method itself
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify(data) // We send data in JSON format
+                })
+                .then(tes => tes.json())
+                .then(data => console.log(data), alert('User sucessfully updated'));
+                
+        } catch(err){
+            console.log('User not edited.')
+        }
+    } else {
+
+    }
+    
 })
 
 buttonDeleteUser?.addEventListener('click', async function(event){
     event.preventDefault();
     try{
-        await fetch(`http://localhost:3000/users/${inputId.value}`, {method: 'DELETE'})
-        .then(() => alert('deletado'))
-        .then(() => cleanObject());
-
-        
+        await fetch(`http://localhost:3000/api/v1/users/${inputId.value}`, {method: 'DELETE'})
+        .then(() => alert('User sucessfully deleted.'))
+        .then(() => cleanObject())
+        .then(() => inputId.value = '');        
     } catch(err){
         console.log(err.message)
     }
@@ -222,6 +214,29 @@ function validateEmail(email){
     let texto = email;
     return padraoEmail.test(texto);
 
+}
+
+function validateAge(){
+    let today = new Date();
+    let birthdate = inputBirthDate.value;
+    console.log(birthdate);
+    let birthdatesplit = birthdate.split('T')[0].split('-');
+    let birthYear = birthdatesplit[0];
+    let birthMonth = birthdatesplit[1];
+    let birthDay = birthdatesplit[2];
+
+    let nascimento = new Date(birthYear, (birthMonth - 1), birthDay);    
+        let diferencaAnos = today.getFullYear() - nascimento.getFullYear();
+        if ( new Date(today.getFullYear(), today.getMonth(), today.getDate()) < 
+             new Date(today.getFullYear(), nascimento.getMonth(), nascimento.getDate()) )
+            diferencaAnos--;
+            console.log(diferencaAnos);   
+    
+    if(diferencaAnos < 18){
+        return false;
+    } else{
+        return true;
+    }
 }
 
 
