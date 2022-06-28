@@ -4,29 +4,32 @@ let inputUserId = document.querySelector('#input-userid');
 let inputTaskId = document.querySelector('#input-taskid');
 
 let buttonConsultById = document.querySelector('#button-get-taskid');
-let buttonSave = document.querySelector('#submit-user');
+let buttonSave = document.querySelector('#button-register-task');
 let buttonGetAll = document.querySelector('#button-get-all');
 let buttonCleanTask = document.querySelector('#clean-task');
 let buttonEditTask = document.querySelector('#button-edittask');
+let buttonDeleteTask = document.querySelector('#button-delete-task');
 
 let divJson = document.querySelector('#json');
 
-buttonSave?.addEventListener('click', function(event){
+buttonSave?.addEventListener('click', async function(event){
     
     event.preventDefault();
+
+    console.log('teste')
 
     let data = fillObject();
 
     if(validateDate(inputDate.value) && inputDescription.value) {
         try{
-            fetch('http://localhost:3000/api/v1/tasks', {
+            await fetch('http://localhost:3000/api/v1/tasks', {
                 method: "POST",
               body: JSON.stringify(data),
               headers: {"Content-type": "application/json; charset=UTF-8"}
             })
             .then(response => response.json()) 
             .then(json => {console.log(json); alert(json['_id'])})
-            .then(() => cleanObject());
+            .then(() => cleanInputs());
         }catch(err){
             console.log(err.message);
         }   
@@ -63,12 +66,11 @@ buttonGetAll?.addEventListener('click', function(event){
 
     buttonConsultById?.addEventListener('click', async function(event){
         event.preventDefault();
-        console.log('teste');
+        console.log(inputTaskId.value);
         try{
             await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`)
             .then((data) => data.json())
             .then((post) => {
-                console.log('teste');
                 inputDescription.value = post['description'],
                 inputDate.value = post['date'],
                 inputUserId.value = post['user']
@@ -84,11 +86,12 @@ buttonCleanTask?.addEventListener('click', () =>{
 })
 
 function cleanInputs(){
-    inputTaskId.value = '',
+    //inputTaskId.value = '',
     inputDescription.value = '',
     inputDate.value = '',
     inputUserId.value = ''
 }
+
 
 buttonEditTask?.addEventListener('click', function(event){
     event.preventDefault();
@@ -105,7 +108,8 @@ buttonEditTask?.addEventListener('click', function(event){
                 body: JSON.stringify(data) // We send data in JSON format
                 })
                 .then(tes => tes.json())
-                .then(data => console.log(data), alert('User sucessfully updated.'));
+                .then(data => console.log(data), alert('User sucessfully updated.'))
+                .then(cleanInputs2());
                 
         } catch(err){
             console.log(err.message)
@@ -115,5 +119,19 @@ buttonEditTask?.addEventListener('click', function(event){
         throw new Error('Date or description incorrect.');
         
     }
+})
+
+buttonDeleteTask?.addEventListener('click', async function(event){
+    event.preventDefault();
+    try{
+        await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`, {method: 'DELETE'})
+        .then(() => alert('User sucessfully deleted.'))
+        .then(() => cleanInputs())
+        .then(() => inputTaskId.value = '');        
+    } catch(err){
+        console.log(err.message)
+    }
+
+    
 })
 

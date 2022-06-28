@@ -1,3 +1,5 @@
+
+
 let buttonGetAll = document.querySelector("#button-get-all");
 let searchUser = document.querySelector("#edit-search");
 let clean = document.querySelector("#edit-clean");
@@ -19,13 +21,15 @@ let inputState = document.querySelector("#input-state");
 let inputCountry = document.querySelector("#input-country");
 let inputZipCode = document.querySelector("#input-zipcode");
 
+console.log('teste');
 
-buttonGetAll?.addEventListener('click', function(){
+buttonGetAll?.addEventListener('click', function(event){
+    event.preventDefault();
     fetch('http://localhost:3000/api/v1/users')
         .then((data) => data.json())
         .then((post) => {
             console.log(post);
-            window.location.href = "http://localhost:3000/api/v1/users?page=1&limit=3";
+            window.open("http://localhost:3000/api/v1/users?page=1&limit=3");
         })
 })
 
@@ -80,8 +84,9 @@ searchUser?.addEventListener('click', async function(event){
             inputCity.value = post['city'],
             inputState.value = post['state'],
             inputCountry.value = post['country'],
-            inputZipCode.value = post['zipCode']
-        })
+            inputZipCode.value = post['zipCode'],
+            console.log(post)
+        });
     } catch(err){
         console.log(err.message, '404 (Not Found)');
     }
@@ -95,6 +100,7 @@ clean?.addEventListener('click' , function(){
 
 buttonEditUser?.addEventListener('click', function(event){
     event.preventDefault();
+    console.log('teste');
 
     let data = fillObject();
 
@@ -118,7 +124,7 @@ buttonEditUser?.addEventListener('click', function(event){
             console.log('User not edited.')
         }
     } else {
-
+        alert('Not edited.')
     }
     
 })
@@ -183,6 +189,8 @@ function validateCPF(strCPF) {
     var Soma;
     var Resto;
     Soma = 0;
+
+    if(strCPF.length != 11) return false;
   if (strCPF == "00000000000") return false;
 
   for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
