@@ -58,6 +58,7 @@ class TasksController{
                 res.status(204).send({message: 'Task successfully deleted'});
             } else {
                 res.status(404).send({message: err.message});
+                
             }
         })
     }

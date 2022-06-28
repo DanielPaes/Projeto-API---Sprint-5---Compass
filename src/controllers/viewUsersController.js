@@ -1,8 +1,6 @@
-
-
 let buttonGetAll = document.querySelector("#button-get-all");
 let searchUser = document.querySelector("#edit-search");
-let clean = document.querySelector("#edit-clean");
+let cleanUser = document.querySelector("#user-clean");
 let buttonEditUser = document.querySelector('#edit-user');
 let buttonDeleteUser = document.querySelector('#edit-delete');
 
@@ -93,8 +91,10 @@ searchUser?.addEventListener('click', async function(event){
 }
 )
 
-clean?.addEventListener('click' , function(){
-
+cleanUser?.addEventListener('click' , function(event){
+    event.preventDefault();
+    cleanObject();
+    inputId.value = '';
 })
 
 
