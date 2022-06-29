@@ -50,6 +50,12 @@ function cleanInputs2(){
     inputUserId.value = ''
 }
 
+function searchErr(value){
+    if(value === 'Id not finded' || inputTaskId.value === ''){
+        throw new Error();
+    }
+}
+
 // HTTP methods
 
 buttonSave?.addEventListener('click', async function(event){    
@@ -85,13 +91,15 @@ buttonConsultById?.addEventListener('click', async function(event){
     try{
         await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`)
             .then((data) => data.json())
-            .then((post) => {
+            .then((post) => {console.log(post),
                 inputDescription.value = post['description'],
                 inputDate.value = post['date'],
-                inputUserId.value = post['user']
+                inputUserId.value = post['user'],
+                searchErr(post.message)
             })
     } catch(err){
-        console.log(err.message, '404 (Not Found)');
+        alert("Task not found.");
+        cleanInputs2();        
     }
 });
 

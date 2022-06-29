@@ -35,7 +35,7 @@ class UsersController{
         const id = req.params.id;
         users.findById(id, (err: any, user:any) =>{
             if(err){
-                res.status(404).send({message: `${err.message} - Id not finded`})
+                res.status(404).send({message:  "Id not finded"});
             } else {
                 res.status(200).send(user);
             }

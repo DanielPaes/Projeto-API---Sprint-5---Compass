@@ -33,7 +33,7 @@ class TasksController{
         const id = req.params.id;
         tasks.findById(id, (err: any, task:any) =>{
             if(err){
-                res.status(404).send({message: `${err.message} - Id not finded`})
+                res.status(404).send({message: `Id not finded`})
             } else {
                 res.status(200).send(task);
             }

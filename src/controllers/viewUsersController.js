@@ -192,7 +192,7 @@ searchUser?.addEventListener('click', async function(event){
     try{
         await fetch(`http://localhost:3000/api/v1/users/${inputId.value}`)
             .then((data) => data.json())
-            .then((post) => {
+            .then((post) => {console.log('asdasd')
                 inputName.value = post['name'],
                 inputCpf.value = post['cpf'],
                 inputBirthDate.value = getBirthDay(post['birthDate']),
@@ -204,11 +204,11 @@ searchUser?.addEventListener('click', async function(event){
                 inputCity.value = post['city'],
                 inputState.value = post['state'],
                 inputCountry.value = post['country'],
-                inputZipCode.value = post['zipCode'],
-                console.log(post)
+                inputZipCode.value = post['zipCode']                
         });
     } catch(err){
-        console.log(err.message, '404 (Not Found)');
+        alert("User not found.");
+        cleanObject();
     }
 })
 
