@@ -4,8 +4,8 @@ let cleanUser = document.querySelector("#user-clean");
 let buttonEditUser = document.querySelector('#edit-user');
 let buttonDeleteUser = document.querySelector('#edit-delete');
 
-let inputId = document.querySelector("#input-id-edit");
 
+let inputId = document.querySelector("#input-id-edit");
 let inputName = document.querySelector("#input-name");
 let inputCpf = document.querySelector("#input-cpf");
 let inputBirthDate = document.querySelector("#input-birthdate");
@@ -19,7 +19,6 @@ let inputState = document.querySelector("#input-state");
 let inputCountry = document.querySelector("#input-country");
 let inputZipCode = document.querySelector("#input-zipcode");
 
-console.log('teste');
 
 buttonGetAll?.addEventListener('click', function(event){
     event.preventDefault();
@@ -39,16 +38,25 @@ let postUser = document.querySelector('#submit-user');
 postUser?.addEventListener('click', function(event){
     event.preventDefault();
 
-    let data = fillObject();
+    console.log(inputBirthDate.value);
+    let cpf = inputCpf.value.replaceAll(/[.-]/g, '')
+     console.log(cpf)
+    // console.log(cpf2)
+    // console.log(cpf3)
+    
 
-    validateAge();
+    //let data = fillObject();
+
+    //validateAge();
 
     if(validatePassword(inputPassword.value) 
         && validateName(inputName.value) 
-        && validateCPF(inputCpf.value) 
+        && validateCPF(cpf) 
         && validateEmail(inputEmail.value)
-        && validateAge()) {
+        && validateAge()
+        && validateRequired()) {
         try{
+            let data = fillObject();
             fetch('http://localhost:3000/api/v1/users', {
                 method: "POST",
               body: JSON.stringify(data),
@@ -65,6 +73,8 @@ postUser?.addEventListener('click', function(event){
     }    
 })
 
+
+
 searchUser?.addEventListener('click', async function(event){
     event.preventDefault();
     try{
@@ -73,7 +83,7 @@ searchUser?.addEventListener('click', async function(event){
         .then((post) => {
             inputName.value = post['name'],
             inputCpf.value = post['cpf'],
-            inputBirthDate.value = post['birthDate'],
+            inputBirthDate.value = getBirthDay(post['birthDate']),
             inputEmail.value = post['email'],
             inputPassword.value = post['password'],
             inputAddress.value = post['address'],
@@ -102,14 +112,20 @@ buttonEditUser?.addEventListener('click', function(event){
     event.preventDefault();
     console.log('teste');
 
-    let data = fillObject();
+    console.log(inputCpf.value);
+    let cpf = inputCpf.value.replaceAll(/[.-]/g, '')
+    console.log(cpf)
+
+    
 
     if(validatePassword(inputPassword.value) 
     && validateName(inputName.value) 
-    && validateCPF(inputCpf.value) 
+    && validateCPF(cpf) 
     && validateEmail(inputEmail.value)
-    && validateAge()){
+    && validateAge()
+    && validateRequired()){
         try{
+            let data = fillObject();
             fetch(`http://localhost:3000/api/v1/users/${inputId.value}`, {
                 method: 'PUT', // Method itself
                 headers: {
@@ -133,7 +149,7 @@ buttonDeleteUser?.addEventListener('click', async function(event){
     event.preventDefault();
     try{
         await fetch(`http://localhost:3000/api/v1/users/${inputId.value}`, {method: 'DELETE'})
-        .then(() => alert('User sucessfully deleted.'))
+        .then((data) => {console.log(data), console.log(alert((data['status'] === 204) ? 'User deleted.' : 'User not deleted.' ))})
         .then(() => cleanObject())
         .then(() => inputId.value = '');        
     } catch(err){
@@ -247,4 +263,29 @@ function validateAge(){
     }
 }
 
+function validateRequired(){
+    if(
+        inputName.value.length > 0 &&
+        inputCpf.value.length > 0 &&
+        inputBirthDate.value.length > 0 &&
+        inputEmail.value.length > 0 &&
+        inputPassword.value.length > 0 &&
+        inputAddress.value.length > 0 &&
+        inputNumber.value.length > 0 &&
+        inputComplement.value.length > 0 &&
+        inputCity.value.length > 0 &&
+        inputState.value.length > 0 &&
+        inputCountry.value.length > 0 &&
+        inputZipCode.value.length > 0 
+    ) {
+        return true;
+    } else{
+        return false;
+    }
+}
+
+function getBirthDay(bday){
+    let bday2 = bday.split('T')[0];
+    return bday2;
+}
 

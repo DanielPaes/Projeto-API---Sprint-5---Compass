@@ -46,7 +46,7 @@ class UsersController{
         const id = req.params.id;
         users.findByIdAndUpdate(id, {$set: req.body}, (err: any) => {
             if(!err){
-                res.status(200).send({message: 'User sucessfully updated'})
+                res.status(204).send({message: 'User sucessfully updated'})
             } else {
                 res.status(404).send({message: err.message})
             }

@@ -41,7 +41,7 @@ buttonSave?.addEventListener('click', async function(event){
 
 buttonGetAll?.addEventListener('click', function(event){
     event.preventDefault();          
-        window.location.href = "http://localhost:3000/api/v1/tasks?page=1&limit=3";
+    window.open("http://localhost:3000/api/v1/tasks?page=1&limit=3");
     });
 
 
@@ -69,7 +69,8 @@ buttonGetAll?.addEventListener('click', function(event){
         console.log(inputTaskId.value);
         try{
             await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`)
-            .then((data) => data.json())
+            .then((data) => data.json()
+                )
             .then((post) => {
                 inputDescription.value = post['description'],
                 inputDate.value = post['date'],
@@ -92,6 +93,13 @@ function cleanInputs(){
     inputUserId.value = ''
 }
 
+function cleanInputs2(){
+    inputTaskId.value = '',
+    inputDescription.value = '',
+    inputDate.value = '',
+    inputUserId.value = ''
+}
+
 
 buttonEditTask?.addEventListener('click', function(event){
     event.preventDefault();
@@ -108,7 +116,7 @@ buttonEditTask?.addEventListener('click', function(event){
                 body: JSON.stringify(data) // We send data in JSON format
                 })
                 .then(tes => tes.json())
-                .then(data => console.log(data), alert('User sucessfully updated.'))
+                .then(data => alert(data.message))
                 .then(cleanInputs2());
                 
         } catch(err){
@@ -125,7 +133,7 @@ buttonDeleteTask?.addEventListener('click', async function(event){
     event.preventDefault();
     try{
         await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`, {method: 'DELETE'})
-        .then(() => alert('User sucessfully deleted.'))
+        .then((data) => {console.log(data), console.log(alert((data['status'] === 204) ? 'Task deleted.' : 'Task not deleted.' ))})
         .then(() => cleanInputs())
         .then(() => inputTaskId.value = '');        
     } catch(err){
