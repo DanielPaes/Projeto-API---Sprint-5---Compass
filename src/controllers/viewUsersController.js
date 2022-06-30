@@ -149,6 +149,28 @@ function getBirthDay(bday){
     return bday2;
 }
 
+function messageErrorValidation(){
+    if(!validatePassword(inputPassword.value)){
+        console.log("Invalid password.");
+    }
+    if(!validateName(inputName.value)){
+        console.log("Invalid name.");
+    }
+    let cpf = inputCpf.value.replaceAll(/[.-]/g, '');
+    if(!validateCPF(cpf)){
+        console.log("Invalid cpf.");
+    }
+    if(!validateEmail(inputEmail.value)){
+        console.log("Invalid password.");
+    }
+    if(!validateAge()){
+        console.log("Invalid age.");
+    }
+    if(!validateRequired()){
+        console.log("All inputs must be fill.");
+    }
+}
+
 // HTTP methods
 
 buttonGetAll?.addEventListener('click', function(event){
@@ -183,7 +205,9 @@ postUser?.addEventListener('click', function(event){
             console.log(err.message);
         }   
     } else {
-        alert("Not included.")
+        messageErrorValidation();
+        alert('User not created.')
+        
     }    
 })
 
@@ -192,7 +216,7 @@ searchUser?.addEventListener('click', async function(event){
     try{
         await fetch(`http://localhost:3000/api/v1/users/${inputId.value}`)
             .then((data) => data.json())
-            .then((post) => {console.log('asdasd')
+            .then((post) => {
                 inputName.value = post['name'],
                 inputCpf.value = post['cpf'],
                 inputBirthDate.value = getBirthDay(post['birthDate']),
@@ -241,6 +265,7 @@ buttonEditUser?.addEventListener('click', async function(event){
             console.log(err.message)
         }
     } else {
+        messageErrorValidation();
         alert('Not edited.')
     } 
 })

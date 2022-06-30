@@ -52,7 +52,7 @@ function cleanInputs2(){
 
 function searchErr(value){
     if(value === 'Id not finded' || inputTaskId.value === ''){
-        throw new Error();
+        throw new Error('Task not found');
     }
 }
 
@@ -70,13 +70,18 @@ buttonSave?.addEventListener('click', async function(event){
               headers: {"Content-type": "application/json; charset=UTF-8"}
             })
             .then(response => response.json()) 
-            .then(json => {console.log(json); alert(json['_id'])})
-            .then(() => cleanInputs());
+            .then(json => {console.log(json); alert(json['_id'])});
         }catch(err){
             console.log(err.message);
         }   
     } else {
         alert("Not included.")
+        if(!validateDate(inputDate.value)){
+            console.log('Invalid date.')
+        }
+        if(!inputDescription.value){
+            console.log('Insert a description.')
+        }
     }    
 });
 
@@ -87,11 +92,11 @@ buttonGetAll?.addEventListener('click', function(event){
 
 buttonConsultById?.addEventListener('click', async function(event){
     event.preventDefault();
-    console.log(inputTaskId.value);
+
     try{
         await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`)
             .then((data) => data.json())
-            .then((post) => {console.log(post),
+            .then((post) => {
                 inputDescription.value = post['description'],
                 inputDate.value = post['date'],
                 inputUserId.value = post['user'],
@@ -99,6 +104,7 @@ buttonConsultById?.addEventListener('click', async function(event){
             })
     } catch(err){
         alert("Task not found.");
+        console.log(err)
         cleanInputs2();        
     }
 });
@@ -120,10 +126,11 @@ buttonEditTask?.addEventListener('click', function(event){
                 },
                 body: JSON.stringify(data) // We send data in JSON format
                 }).then(tes => tes.json())
-                    .then(data => alert(data.message))
-                    .then(cleanInputs2());                
+                    .then(data => alert(data.message));
+                    //.then(cleanInputs2());                
         } catch(err){
-            console.log(err.message)
+            console.log(err.message);
+            console.log('User not found.');
         }
     } else {
         alert('Edition failed.');
@@ -137,7 +144,6 @@ buttonDeleteTask?.addEventListener('click', async function(event){
         await fetch(`http://localhost:3000/api/v1/tasks/${inputTaskId.value}`,
             {method: 'DELETE'})
             .then((data) => {console.log(data), console.log(alert((data['status'] === 204) ? 'Task deleted.' : 'Task not deleted.' ))})
-            .then(() => cleanInputs())
             .then(() => inputTaskId.value = '');        
     } catch(err){
         console.log(err.message)
